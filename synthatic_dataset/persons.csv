@@ -1,0 +1,61 @@
+person_id,name,state,district,role,case_id
+P001,Person Alpha,Chhattisgarh,Raipur,subject,FIR_0017
+P002,Person Bravo,Odisha,Khordha,subject,FIR_0022
+P003,Person Charlie,West Bengal,Kolkata,associate,FIR_0001
+P004,Rohan Nayak,Chhattisgarh,Raipur,subject,FIR_0024
+P005,Ishaan Das,Maharashtra,Nagpur,business_contact,FIR_0012
+P006,Ishaan Sahu,West Bengal,Kolkata,business_contact,FIR_0030
+P007,Aarav Jena,Chhattisgarh,Raipur,witness,FIR_0014
+P008,Aditya Das,Odisha,Khordha,business_contact,FIR_0028
+P009,Aditya Singh,Jharkhand,Ranchi,subject,FIR_0010
+P010,Arjun Jena,Jharkhand,Ranchi,subject,FIR_0001
+P011,Rohan Khan,Jharkhand,Ranchi,associate,FIR_0022
+P012,Aditya Das,Maharashtra,Nagpur,business_contact,FIR_0027
+P013,Kavya Nayak,Odisha,Khordha,witness,FIR_0001
+P014,Soham Khan,Odisha,Khordha,witness,FIR_0015
+P015,Kavya Jena,Chhattisgarh,Raipur,witness,FIR_0008
+P016,Farhan Patnaik,Odisha,Khordha,witness,FIR_0001
+P017,Nikhil Mishra,Chhattisgarh,Raipur,business_contact,FIR_0024
+P018,Meera Sharma,Odisha,Khordha,associate,FIR_0015
+P019,Nikhil Singh,Maharashtra,Nagpur,business_contact,FIR_0023
+P020,Aditya Behera,West Bengal,Kolkata,witness,FIR_0012
+P021,Nikhil Sahu,Odisha,Khordha,associate,FIR_0012
+P022,Diya Nayak,Chhattisgarh,Raipur,associate,FIR_0010
+P023,Vivaan Singh,West Bengal,Kolkata,witness,FIR_0018
+P024,Arjun Patnaik,West Bengal,Kolkata,business_contact,FIR_0025
+P025,Ananya Jena,West Bengal,Kolkata,associate,FIR_0005
+P026,Rohan Patnaik,Maharashtra,Nagpur,witness,FIR_0022
+P027,Farhan Sahu,Jharkhand,Ranchi,associate,FIR_0013
+P028,Rahul Nayak,Odisha,Khordha,business_contact,FIR_0020
+P029,Kabir Das,Jharkhand,Ranchi,business_contact,FIR_0023
+P030,Rohan Sahu,Maharashtra,Nagpur,witness,FIR_0026
+P031,Sanjay Khan,Chhattisgarh,Raipur,subject,FIR_0029
+P032,Kavya Sahu,Maharashtra,Nagpur,subject,FIR_0013
+P033,Soham Khan,Maharashtra,Nagpur,subject,FIR_0011
+P034,Ananya Nayak,West Bengal,Kolkata,business_contact,FIR_0023
+P035,Soham Behera,Odisha,Khordha,business_contact,FIR_0009
+P036,Diya Khan,Odisha,Khordha,business_contact,FIR_0001
+P037,Nikhil Sahu,Odisha,Khordha,associate,FIR_0028
+P038,Aarav Behera,Jharkhand,Ranchi,associate,FIR_0028
+P039,Diya Patnaik,Odisha,Khordha,subject,FIR_0019
+P040,Kabir Nayak,Jharkhand,Ranchi,business_contact,FIR_0018
+P041,Aditya Das,Jharkhand,Ranchi,subject,FIR_0020
+P042,Neha Khan,Jharkhand,Ranchi,associate,FIR_0025
+P043,Sanjay Behera,Chhattisgarh,Raipur,witness,FIR_0026
+P044,Arjun Sahu,Jharkhand,Ranchi,business_contact,FIR_0003
+P045,Kavya Sahu,Jharkhand,Ranchi,associate,FIR_0019
+P046,Farhan Mishra,Odisha,Khordha,business_contact,FIR_0024
+P047,Rohan Sharma,West Bengal,Kolkata,subject,FIR_0006
+P048,Nikhil Sharma,Chhattisgarh,Raipur,witness,FIR_0003
+P049,Diya Patnaik,Odisha,Khordha,business_contact,FIR_0002
+P050,Aarav Patnaik,Odisha,Khordha,business_contact,FIR_0012
+P051,Rahul Patnaik,Odisha,Khordha,business_contact,FIR_0030
+P052,Ishaan Das,Jharkhand,Ranchi,business_contact,FIR_0013
+P053,Ishaan Jena,Chhattisgarh,Raipur,witness,FIR_0014
+P054,Rohan Das,Jharkhand,Ranchi,subject,FIR_0014
+P055,Rahul Singh,Jharkhand,Ranchi,subject,FIR_0019
+P056,Kavya Sharma,Odisha,Khordha,subject,FIR_0007
+P057,Ishaan Singh,Odisha,Khordha,subject,FIR_0017
+P058,Rahul Das,Maharashtra,Nagpur,associate,FIR_0013
+P059,Sanjay Nayak,Odisha,Khordha,witness,FIR_0004
+P060,Rohan Patnaik,West Bengal,Kolkata,business_contact,FIR_0025

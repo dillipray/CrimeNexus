@@ -1,0 +1,31 @@
+case_id,fir_number,police_station,district,state,crime_type,incident_date,status
+FIR_0001,001/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,organized financial fraud,2026-07-07,under_review
+FIR_0002,002/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,organized financial fraud,2026-01-28,under_review
+FIR_0003,003/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,cyber-enabled fraud,2026-04-27,open
+FIR_0004,004/2026,Sample Khordha Police Station,Khordha,Odisha,organized financial fraud,2026-03-25,closed_demo
+FIR_0005,005/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,organized financial fraud,2026-05-26,closed_demo
+FIR_0006,006/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,vehicle theft network,2026-04-29,under_review
+FIR_0007,007/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,extortion,2026-06-08,closed_demo
+FIR_0008,008/2026,Sample Kolkata Police Station,Kolkata,West Bengal,organized financial fraud,2026-08-05,under_review
+FIR_0009,009/2026,Sample Ranchi Police Station,Ranchi,Jharkhand,vehicle theft network,2026-05-08,closed_demo
+FIR_0010,010/2026,Sample Kolkata Police Station,Kolkata,West Bengal,organized financial fraud,2026-06-12,closed_demo
+FIR_0011,011/2026,Sample Ranchi Police Station,Ranchi,Jharkhand,vehicle theft network,2026-04-17,under_review
+FIR_0012,012/2026,Sample Raipur Police Station,Raipur,Chhattisgarh,cyber-enabled fraud,2026-08-22,open
+FIR_0013,013/2026,Sample Ranchi Police Station,Ranchi,Jharkhand,vehicle theft network,2026-03-31,under_review
+FIR_0014,014/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,organized financial fraud,2026-04-06,open
+FIR_0015,015/2026,Sample Kolkata Police Station,Kolkata,West Bengal,illegal trafficking,2026-04-11,closed_demo
+FIR_0016,016/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,illegal trafficking,2026-07-11,open
+FIR_0017,017/2026,Sample Ranchi Police Station,Ranchi,Jharkhand,extortion,2026-03-30,open
+FIR_0018,018/2026,Sample Raipur Police Station,Raipur,Chhattisgarh,extortion,2026-07-11,under_review
+FIR_0019,019/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,extortion,2026-02-22,closed_demo
+FIR_0020,020/2026,Sample Khordha Police Station,Khordha,Odisha,extortion,2026-04-08,open
+FIR_0021,021/2026,Sample Ranchi Police Station,Ranchi,Jharkhand,cyber-enabled fraud,2026-02-07,open
+FIR_0022,022/2026,Sample Kolkata Police Station,Kolkata,West Bengal,extortion,2026-07-28,under_review
+FIR_0023,023/2026,Sample Raipur Police Station,Raipur,Chhattisgarh,vehicle theft network,2026-07-06,open
+FIR_0024,024/2026,Sample Ranchi Police Station,Ranchi,Jharkhand,organized financial fraud,2026-02-11,open
+FIR_0025,025/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,cyber-enabled fraud,2026-03-25,under_review
+FIR_0026,026/2026,Sample Khordha Police Station,Khordha,Odisha,cyber-enabled fraud,2026-06-16,under_review
+FIR_0027,027/2026,Sample Ranchi Police Station,Ranchi,Jharkhand,illegal trafficking,2026-06-23,closed_demo
+FIR_0028,028/2026,Sample Nagpur Police Station,Nagpur,Maharashtra,extortion,2026-02-16,closed_demo
+FIR_0029,029/2026,Sample Khordha Police Station,Khordha,Odisha,organized financial fraud,2026-05-23,open
+FIR_0030,030/2026,Sample Raipur Police Station,Raipur,Chhattisgarh,organized financial fraud,2026-03-07,under_review

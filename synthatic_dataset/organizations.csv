@@ -1,0 +1,16 @@
+organization_id,name,type,location_id
+ORG_001,Synthetic Services Group 1,front_company,LOC_0302
+ORG_002,Synthetic Trading Group 2,company,LOC_0403
+ORG_003,Synthetic Services Group 3,association,LOC_0501
+ORG_004,Synthetic Trading Group 4,company,LOC_0104
+ORG_005,Synthetic Services Group 5,association,LOC_0402
+ORG_006,Synthetic Trading Group 6,company,LOC_0502
+ORG_007,Synthetic Logistics Group 7,front_company,LOC_0203
+ORG_008,Synthetic Exports Group 8,association,LOC_0201
+ORG_009,Synthetic Services Group 9,association,LOC_0501
+ORG_010,Synthetic Logistics Group 10,association,LOC_0402
+ORG_011,Synthetic Logistics Group 11,company,LOC_0303
+ORG_012,Synthetic Exports Group 12,association,LOC_0302
+ORG_013,Synthetic Trading Group 13,front_company,LOC_0501
+ORG_014,Synthetic Trading Group 14,company,LOC_0101
+ORG_015,Synthetic Trading Group 15,company,LOC_0303

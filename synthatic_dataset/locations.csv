@@ -1,0 +1,21 @@
+location_id,name,district,state,latitude,longitude,synthetic_coordinate
+LOC_0101,Synthetic Warehouse 1-1,Khordha,Odisha,20.55452,73.98964,true
+LOC_0102,Synthetic Transport Hub 1-2,Khordha,Odisha,20.74612,87.38458,true
+LOC_0103,Synthetic Transport Hub 1-3,Khordha,Odisha,22.95557,75.18356,true
+LOC_0104,Synthetic Transport Hub 1-4,Khordha,Odisha,21.20423,74.89539,true
+LOC_0201,Synthetic Market 2-1,Kolkata,West Bengal,22.44014,84.7561,true
+LOC_0202,Synthetic Market 2-2,Kolkata,West Bengal,18.74484,79.31337,true
+LOC_0203,Synthetic Transport Hub 2-3,Kolkata,West Bengal,18.59627,85.55946,true
+LOC_0204,Synthetic Market 2-4,Kolkata,West Bengal,21.7074,81.07985,true
+LOC_0301,Synthetic Transport Hub 3-1,Ranchi,Jharkhand,21.48193,81.56236,true
+LOC_0302,Synthetic Transport Hub 3-2,Ranchi,Jharkhand,23.25853,75.38359,true
+LOC_0303,Synthetic Market 3-3,Ranchi,Jharkhand,19.63743,86.84093,true
+LOC_0304,Synthetic Market 3-4,Ranchi,Jharkhand,21.49214,74.3466,true
+LOC_0401,Synthetic Transport Hub 4-1,Raipur,Chhattisgarh,18.67038,81.0424,true
+LOC_0402,Synthetic Warehouse 4-2,Raipur,Chhattisgarh,18.47597,79.2425,true
+LOC_0403,Synthetic Office 4-3,Raipur,Chhattisgarh,18.72249,79.48588,true
+LOC_0404,Synthetic Office 4-4,Raipur,Chhattisgarh,20.84661,74.25657,true
+LOC_0501,Synthetic Transport Hub 5-1,Nagpur,Maharashtra,19.56579,80.67178,true
+LOC_0502,Synthetic Market 5-2,Nagpur,Maharashtra,21.28453,82.15418,true
+LOC_0503,Synthetic Office 5-3,Nagpur,Maharashtra,20.29554,84.74008,true
+LOC_0504,Synthetic Office 5-4,Nagpur,Maharashtra,20.00286,78.51779,true

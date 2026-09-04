@@ -1,0 +1,131 @@
+:root {
+  --bg: #0E161F;
+  --panel: #141F2B;
+  --panel-alt: #1A2733;
+  --raised: #1E2C39;
+  --border: #28394A;
+  --border-soft: #1F2E3C;
+  --text: #E6EDF4;
+  --text-dim: #93A6B8;
+  --text-faint: #5D7086;
+  --signal: #3FC1C9;
+  --signal-dim: #1F5B60;
+  --flag: #E8A33D;
+  --flag-dim: #5C4419;
+  --danger: #E0645A;
+  --danger-dim: #5B2620;
+  --ok: #7FB77E;
+  --ok-dim: #2E4A2C;
+  --violet: #B98CCE;
+  --violet-dim: #453357;
+  --display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+  --body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-soft);
+}
+
+/* Transitions and interactive states */
+.navbtn {
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.navbtn:hover {
+  background: var(--panel-alt);
+}
+
+.node {
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.node:hover circle.ring {
+  stroke-opacity: 1 !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tabpane {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 0.85s linear infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 2px var(--signal)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px var(--signal)); }
+}
+
+.pulse-signal {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(20, 31, 43, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
