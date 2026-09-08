@@ -54,15 +54,18 @@ def get_case(case_id: str):
 @router.get("/{case_id}/summary")
 def get_case_summary(case_id: str):
     cg = loader.case_graphs.get(case_id)
-    node_count = cg.number_of_nodes() if cg else 12
-    edge_count = cg.number_of_edges() if cg else 13
+    node_count = cg.number_of_nodes() if cg else 0
+    edge_count = cg.number_of_edges() if cg else 0
+    
+    txn_count = sum(1 for t in loader.transactions if t.get("case_id") == case_id)
+    cdr_count = sum(1 for cdr in loader.cdr_records if cdr.get("case_id") == case_id)
     
     return {
         "case_id": case_id,
         "kpi": {
-            "evidence_items": 248,
-            "entities": max(node_count, 12),
-            "relationships": max(edge_count, 13),
+            "evidence_items": txn_count + cdr_count,
+            "entities": node_count,
+            "relationships": edge_count,
             "ai_leads": 4,
             "pending_reviews": 3,
             "active_cases": len(loader.cases),

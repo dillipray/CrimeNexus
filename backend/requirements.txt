@@ -5,3 +5,15 @@ networkx>=3.2.0
 numpy>=1.26.0
 scikit-learn>=1.4.0
 python-multipart>=0.0.9
+# PDF text extraction — digital PDFs
+pypdf>=6.0.0
+# PDF OCR — scanned/image PDFs (requires paddlepaddle backend)
+paddleocr>=3.7.0
+paddlepaddle>=3.3.0
+pypdfium2>=4.30.0
+spacy>=3.8.0
+# Relational (PostgreSQL) and Graph (Neo4j) database drivers
+psycopg2-binary>=2.9.9
+sqlalchemy>=2.0.0
+neo4j>=5.18.0
+python-dotenv>=1.0.0
