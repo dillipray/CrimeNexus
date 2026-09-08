@@ -1,6 +1,7 @@
 from typing import Dict, List, Any, Optional
 import networkx as nx
 from backend.data_loader import loader
+from backend.db.neo4j_client import neo4j_client
 
 class GraphService:
     def __init__(self, data_loader=loader):
@@ -61,40 +62,51 @@ class GraphService:
     def detect_bridges_and_communities(self, case_id: Optional[str] = None) -> Dict[str, Any]:
         G = self.get_case_graph(case_id)
         if G.number_of_nodes() == 0:
-            return {"bridges": [], "components": []}
+            return {"bridges": [], "communities": []}
 
-        # Connected components in current graph
-        components = [list(c) for c in nx.connected_components(G)]
+        # 1. Detect bridges
+        bridges = []
+        if not G.is_directed():
+            try:
+                for u, v in nx.bridges(G):
+                    bridges.append({"source": u, "target": v, "type": "bridge_link"})
+            except Exception:
+                pass
 
-        # Bridge edges in current graph
-        bridge_edges = list(nx.bridges(G))
-        formatted_bridges = []
-        for u, v in bridge_edges:
-            data = G.get_edge_data(u, v, default={})
-            u_name = G.nodes.get(u, {}).get("name", u)
-            v_name = G.nodes.get(v, {}).get("name", v)
-            formatted_bridges.append({
-                "source": u,
-                "source_name": u_name,
-                "target": v,
-                "target_name": v_name,
-                "type": data.get("type", "link"),
-                "evidence": data.get("evidence", "EVD-UNKNOWN"),
-            })
+        # 2. Communities (greedy modularity communities)
+        communities_out = []
+        try:
+            from networkx.algorithms.community import greedy_modularity_communities
+            comms = greedy_modularity_communities(G)
+            for i, comm in enumerate(comms):
+                communities_out.append({
+                    "id": f"cluster-{i+1}",
+                    "name": f"Cluster {i+1}",
+                    "nodes": list(comm),
+                    "size": len(comm),
+                })
+        except Exception:
+            pass
 
         return {
-            "component_count": len(components),
-            "components": [
-                [{"id": n, "name": G.nodes.get(n, {}).get("name", n), "type": G.nodes.get(n, {}).get("type", "UNKNOWN")} for n in comp]
-                for comp in sorted(components, key=len, reverse=True)[:5]
-            ],
-            "bridges": formatted_bridges[:10],
+            "bridges": bridges,
+            "communities": communities_out,
         }
 
-    def get_subgraph(self, case_id: Optional[str] = None, center_id: Optional[str] = None, hops: int = 2) -> Dict[str, Any]:
+    def get_subgraph(
+        self, case_id: Optional[str] = None, center_id: Optional[str] = None, hops: int = 2
+    ) -> Dict[str, Any]:
+        # 1. Try querying Neo4j if live
+        if neo4j_client.is_connected:
+            neo_res = neo4j_client.get_subgraph(case_id=case_id, center_id=center_id, hops=hops)
+            if neo_res and neo_res.get("nodes"):
+                neo_res["storage"] = "neo4j"
+                return neo_res
+
+        # 2. Fallback to in-memory NetworkX case graph
         G = self.get_case_graph(case_id)
         if G.number_of_nodes() == 0:
-            return {"nodes": [], "edges": []}
+            return {"nodes": [], "edges": [], "storage": "networkx"}
 
         if center_id and G.has_node(center_id):
             sub_nodes = set([center_id])
@@ -107,7 +119,7 @@ class GraphService:
                 current_level = next_level
             subG = G.subgraph(sub_nodes)
         else:
-            # If no center node specified, take largest connected component up to 40 nodes for crisp UI rendering
+            # If no center node specified, take largest connected component up to 45 nodes for crisp UI rendering
             components = sorted(nx.connected_components(G), key=len, reverse=True)
             if components:
                 nodes_sample = list(components[0])[:45]
@@ -138,12 +150,20 @@ class GraphService:
                 "amount": data.get("amount"),
             })
 
-        return {"nodes": nodes_list, "edges": edges_list}
+        return {"nodes": nodes_list, "edges": edges_list, "storage": "networkx"}
 
     def shortest_path(self, source_id: str, target_id: str, case_id: Optional[str] = None) -> Dict[str, Any]:
+        # 1. Try Neo4j if live
+        if neo4j_client.is_connected:
+            neo_path = neo4j_client.shortest_path(source_id=source_id, target_id=target_id, case_id=case_id)
+            if neo_path.get("found"):
+                neo_path["storage"] = "neo4j"
+                return neo_path
+
+        # 2. Fallback to NetworkX
         G = self.get_case_graph(case_id)
         if not G.has_node(source_id) or not G.has_node(target_id):
-            return {"path": [], "length": -1, "found": False}
+            return {"path": [], "length": -1, "found": False, "storage": "networkx"}
 
         try:
             path = nx.shortest_path(G, source=source_id, target=target_id)
@@ -151,8 +171,8 @@ class GraphService:
                 {"id": n, "name": G.nodes.get(n, {}).get("name", n), "type": G.nodes.get(n, {}).get("type", "UNKNOWN")}
                 for n in path
             ]
-            return {"path": details, "length": len(path) - 1, "found": True}
+            return {"path": details, "length": len(path) - 1, "found": True, "storage": "networkx"}
         except nx.NetworkXNoPath:
-            return {"path": [], "length": -1, "found": False}
+            return {"path": [], "length": -1, "found": False, "storage": "networkx"}
 
 graph_service = GraphService()
