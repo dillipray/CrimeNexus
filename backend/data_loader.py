@@ -1,14 +1,16 @@
 import os
 import csv
+import logging
 from typing import Dict, List, Any, Optional
 import networkx as nx
+from backend.db.config import DATASET_DIR
+from backend.db.postgres_client import postgres_client
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATASET_DIR = os.path.join(BASE_DIR, "synthatic_dataset")
+logger = logging.getLogger("NexusIntel.DataLoader")
 
 class DataLoader:
-    def __init__(self, dataset_dir: str = DATASET_DIR):
-        self.dataset_dir = dataset_dir
+    def __init__(self, dataset_dir: str = str(DATASET_DIR)):
+        self.dataset_dir = str(dataset_dir)
         self.cases: Dict[str, Dict[str, Any]] = {}
         self.persons: Dict[str, Dict[str, Any]] = {}
         self.phones: Dict[str, Dict[str, Any]] = {}
@@ -21,64 +23,79 @@ class DataLoader:
         self.transactions: List[Dict[str, Any]] = []
         self.graph: nx.Graph = nx.Graph()
         self.case_graphs: Dict[str, nx.Graph] = {}
+        self.storage_source: str = "csv"
         
         self.load_all()
 
-    def _read_csv(self, filename: str) -> List[Dict[str, str]]:
+    def _read_table_or_csv(self, table_name: str, filename: str) -> List[Dict[str, Any]]:
+        # 1. Try PostgreSQL if connected
+        if postgres_client.is_connected:
+            rows = postgres_client.fetch_all(table_name)
+            if rows:
+                self.storage_source = "postgresql"
+                return rows
+
+        # 2. Fallback to synthetic dataset CSV
+        self.storage_source = "csv"
         filepath = os.path.join(self.dataset_dir, filename)
         if not os.path.exists(filepath):
-            return []
+            # Also try alternative candidate paths
+            alt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "src", "data", "synthatic_dataset", filename)
+            if os.path.exists(alt_path):
+                filepath = alt_path
+            else:
+                return []
         with open(filepath, mode="r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             return list(reader)
 
     def load_all(self):
         # 1. Cases
-        for row in self._read_csv("cases.csv"):
+        for row in self._read_table_or_csv("cases", "cases.csv"):
             cid = row["case_id"]
             self.cases[cid] = row
             self.case_graphs[cid] = nx.Graph()
 
         # 2. Persons
-        for row in self._read_csv("persons.csv"):
+        for row in self._read_table_or_csv("persons", "persons.csv"):
             pid = row["person_id"]
             self.persons[pid] = row
 
         # 3. Phones
-        for row in self._read_csv("phones.csv"):
+        for row in self._read_table_or_csv("phones", "phones.csv"):
             phid = row["phone_id"]
             self.phones[phid] = row
 
         # 4. Accounts
-        for row in self._read_csv("accounts.csv"):
+        for row in self._read_table_or_csv("accounts", "accounts.csv"):
             aid = row["account_id"]
             self.accounts[aid] = row
 
         # 5. Vehicles
-        for row in self._read_csv("vehicles.csv"):
+        for row in self._read_table_or_csv("vehicles", "vehicles.csv"):
             vid = row["vehicle_id"]
             self.vehicles[vid] = row
 
         # 6. Locations
-        for row in self._read_csv("locations.csv"):
+        for row in self._read_table_or_csv("locations", "locations.csv"):
             lid = row["location_id"]
             self.locations[lid] = row
 
         # 7. Organizations
-        for row in self._read_csv("organizations.csv"):
+        for row in self._read_table_or_csv("organizations", "organizations.csv"):
             oid = row["organization_id"]
             self.organizations[oid] = row
 
         # 8. FIR Reports
-        for row in self._read_csv("fir_reports.csv"):
+        for row in self._read_table_or_csv("fir_reports", "fir_reports.csv"):
             cid = row["case_id"]
             self.fir_reports[cid] = row
 
         # 9. CDR records
-        self.cdr_records = self._read_csv("cdr_records.csv")
+        self.cdr_records = self._read_table_or_csv("cdr_records", "cdr_records.csv")
 
         # 10. Transactions
-        self.transactions = self._read_csv("transactions.csv")
+        self.transactions = self._read_table_or_csv("transactions", "transactions.csv")
 
         self.build_graphs()
 

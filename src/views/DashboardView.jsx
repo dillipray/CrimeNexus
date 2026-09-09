@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   FileText,
   Users,
@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { T } from '../data/mockData';
+import { getCaseStats, getLeadsForCase, getDuplicateForCase } from '../data/graphFromDataset';
 
 export default function DashboardView({
   leads,
@@ -24,7 +25,10 @@ export default function DashboardView({
   activeCase,
   currentRole,
 }) {
-  const reviewLeads = leads.filter((l) => l.status === "review");
+  const stats = useMemo(() => getCaseStats(activeCase), [activeCase]);
+  const caseLeads = useMemo(() => getLeadsForCase(activeCase, leads), [activeCase, leads]);
+  const reviewLeads = caseLeads.filter((l) => l.status === "review");
+  const caseDup = useMemo(() => getDuplicateForCase(activeCase), [activeCase]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 1180 }}>
@@ -53,12 +57,45 @@ export default function DashboardView({
 
       {/* KPI Cards Grid */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 12 }}>
-        <KpiCard label="Evidence Items" value="248" icon={FileText} />
-        <KpiCard label="Entities" value="1,842" icon={Users} />
-        <KpiCard label="Relationships" value="5,620" icon={Network} />
-        <KpiCard label="AI Leads" value={leads.length} icon={Lightbulb} accent={T.flag} />
-        <KpiCard label="Pending Reviews" value={reviewLeads.length} icon={AlertTriangle} accent={T.flag} />
-        <KpiCard label="Active Cases" value="30" icon={ShieldCheck} accent={T.signal} />
+        <KpiCard
+          label="Evidence Items"
+          value={stats.evidenceItems.toLocaleString()}
+          sub={`${stats.cdrCount} CDR · ${stats.txnCount} Txn`}
+          icon={FileText}
+        />
+        <KpiCard
+          label="Entities"
+          value={stats.entities.toLocaleString()}
+          sub={`${stats.personsCount} Pers · ${stats.phonesCount} Ph · ${stats.accountsCount} Acc`}
+          icon={Users}
+        />
+        <KpiCard
+          label="Relationships"
+          value={stats.relationships.toLocaleString()}
+          sub="Direct Case Edges"
+          icon={Network}
+        />
+        <KpiCard
+          label="AI Leads"
+          value={caseLeads.length}
+          sub={`${reviewLeads.length} triage pending`}
+          icon={Lightbulb}
+          accent={T.flag}
+        />
+        <KpiCard
+          label="Pending Reviews"
+          value={reviewLeads.length}
+          sub="Human-in-the-loop"
+          icon={AlertTriangle}
+          accent={T.flag}
+        />
+        <KpiCard
+          label="Active Cases"
+          value={stats.activeCases.toLocaleString()}
+          sub="Jurisdictions active"
+          icon={ShieldCheck}
+          accent={T.signal}
+        />
       </div>
 
       {/* Main Grid: Leads Preview + Duplicate Resolution Alert */}
@@ -132,7 +169,7 @@ export default function DashboardView({
                 <span style={{ fontSize: 13, fontWeight: 600 }}>Duplicate Entities Flagged ({pendingMatches})</span>
               </div>
               <p style={{ fontSize: 12.5, color: T.textDim, lineHeight: 1.5, marginBottom: 12 }}>
-                High similarity detected between <strong>Devraj Sharma</strong> and <strong>D. Sharma</strong> (91% match confidence on vehicle and phone co-occurrence).
+                High similarity detected between <strong>{caseDup.a}</strong> and <strong>{caseDup.b}</strong> ({caseDup.confidence}% match confidence on {caseDup.detail}).
               </p>
               <div style={{ display: "flex", gap: 8 }}>
                 <button
@@ -194,7 +231,7 @@ export default function DashboardView({
   );
 }
 
-function KpiCard({ label, value, icon: Icon, accent }) {
+function KpiCard({ label, value, icon: Icon, accent, sub }) {
   return (
     <div
       style={{
@@ -204,7 +241,7 @@ function KpiCard({ label, value, icon: Icon, accent }) {
         padding: "16px 18px",
         display: "flex",
         flexDirection: "column",
-        gap: 8,
+        gap: 6,
         minWidth: 0,
       }}
     >
@@ -217,6 +254,11 @@ function KpiCard({ label, value, icon: Icon, accent }) {
       <span style={{ fontFamily: "var(--display)", fontSize: 24, fontWeight: 600, color: T.text }}>
         {value}
       </span>
+      {sub && (
+        <span style={{ fontSize: 11, color: T.textFaint, marginTop: -2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {sub}
+        </span>
+      )}
     </div>
   );
 }

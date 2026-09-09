@@ -29,6 +29,8 @@ export default function TopBar({
   onSelectEntity,
   onSearchEnter,
   backendConnected,
+  casesList = CASES,
+  dbStatus = { postgres: 'offline', neo4j: 'offline' },
 }) {
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
   const [caseMenuOpen, setCaseMenuOpen] = useState(false);
@@ -98,16 +100,20 @@ export default function TopBar({
               position: "absolute",
               top: 38,
               left: 0,
-              width: 280,
+              width: 320,
+              maxHeight: 320,
+              overflowY: "auto",
               background: T.raised,
               border: `1px solid ${T.border}`,
               borderRadius: 8,
               boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
-              overflow: "hidden",
               zIndex: 50,
             }}
           >
-            {CASES.map((c) => (
+            <div style={{ padding: "8px 12px", fontSize: 11, fontWeight: 700, color: T.textFaint, borderBottom: `1px solid ${T.borderSoft}`, textTransform: "uppercase" }}>
+              Select Investigation Case ({casesList.length})
+            </div>
+            {casesList.map((c) => (
               <div
                 key={c.id}
                 onClick={() => {
@@ -116,47 +122,109 @@ export default function TopBar({
                 }}
                 className="navbtn"
                 style={{
-                  padding: "9px 12px",
-                  fontSize: 12.5,
+                  padding: "8px 12px",
+                  fontSize: 12,
                   cursor: "pointer",
                   color: activeCase === c.id ? T.signal : T.text,
                   borderBottom: `1px solid ${T.borderSoft}`,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                {c.label}
+                <span>{c.label || c.id}</span>
+                {activeCase === c.id && <span style={{ fontSize: 10, color: T.signal, fontWeight: 700 }}>ACTIVE</span>}
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Backend Dual-Operational Status Pill */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          padding: "4px 10px",
-          borderRadius: 20,
-          background: backendConnected ? T.okDim : T.panelAlt,
-          border: `1px solid ${backendConnected ? T.ok + "44" : T.border}`,
-          fontSize: 11,
-          fontWeight: 600,
-          letterSpacing: 0.3,
-          color: backendConnected ? T.ok : T.textDim,
-        }}
-        title={backendConnected ? "Connected to live FastAPI & NetworkX backend" : "Operating in standalone client-side mock mode"}
-      >
+      {/* Backend & Dual Database Status Indicator Pills */}
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        {/* Backend API Pill */}
         <div
           style={{
-            width: 7,
-            height: 7,
-            borderRadius: "50%",
-            background: backendConnected ? T.ok : T.flag,
-            boxShadow: backendConnected ? `0 0 6px ${T.ok}` : "none",
+            display: "flex",
+            alignItems: "center",
+            gap: 5,
+            padding: "3px 8px",
+            borderRadius: 20,
+            background: backendConnected ? T.okDim : T.panelAlt,
+            border: `1px solid ${backendConnected ? T.ok + "44" : T.border}`,
+            fontSize: 10.5,
+            fontWeight: 600,
+            letterSpacing: 0.3,
+            color: backendConnected ? T.ok : T.textDim,
           }}
-        />
-        {backendConnected ? "LIVE FASTAPI BACKEND" : "STANDALONE CLIENT MODE"}
+          title={backendConnected ? "Connected to live FastAPI engine" : "Operating in standalone client-side mock mode"}
+        >
+          <div
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: backendConnected ? T.ok : T.flag,
+            }}
+          />
+          {backendConnected ? "FASTAPI" : "CLIENT"}
+        </div>
+
+        {/* PostgreSQL Pill */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 5,
+            padding: "3px 8px",
+            borderRadius: 20,
+            background: dbStatus?.postgres === "connected" ? T.okDim : T.panelAlt,
+            border: `1px solid ${dbStatus?.postgres === "connected" ? T.ok + "44" : T.border}`,
+            fontSize: 10.5,
+            fontWeight: 600,
+            letterSpacing: 0.3,
+            color: dbStatus?.postgres === "connected" ? T.ok : T.textFaint,
+          }}
+          title={dbStatus?.postgres === "connected" ? "PostgreSQL Relational DB: Connected" : "PostgreSQL: Offline (using Section 15.1 Synthetic Dataset)"}
+        >
+          <div
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: dbStatus?.postgres === "connected" ? T.ok : T.textFaint,
+            }}
+          />
+          POSTGRES
+        </div>
+
+        {/* Neo4j Pill */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 5,
+            padding: "3px 8px",
+            borderRadius: 20,
+            background: dbStatus?.neo4j === "connected" ? T.okDim : T.panelAlt,
+            border: `1px solid ${dbStatus?.neo4j === "connected" ? T.ok + "44" : T.border}`,
+            fontSize: 10.5,
+            fontWeight: 600,
+            letterSpacing: 0.3,
+            color: dbStatus?.neo4j === "connected" ? T.ok : T.textFaint,
+          }}
+          title={dbStatus?.neo4j === "connected" ? "Neo4j Graph Database: Connected" : "Neo4j: Offline (using NetworkX Graph Analytics)"}
+        >
+          <div
+            style={{
+              width: 6,
+              height: 6,
+              borderRadius: "50%",
+              background: dbStatus?.neo4j === "connected" ? T.ok : T.textFaint,
+            }}
+          />
+          NEO4J
+        </div>
       </div>
 
       {/* Global Search */}

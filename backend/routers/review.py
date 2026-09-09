@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 from backend.services.nlp_service import nlp_service
 from backend.services.audit_service import audit_service
+from backend.services.text_cleaner import clean_text
 
 router = APIRouter(prefix="/review", tags=["Entity Resolution & Triage"])
 
@@ -87,16 +88,20 @@ def resolve_duplicate(match_id: str, req: ResolveMatchRequest):
 
 @router.post("/ner-extract")
 def extract_document_entities(req: DocumentExtractionRequest):
-    result = nlp_service.extract_entities(req.text)
+    cleaned_text = clean_text(req.text)
+    result = nlp_service.extract_entities(cleaned_text)
+    relationships = nlp_service.extract_relationships(cleaned_text, result)
     audit_service.log(
         actor=req.actor,
         role=req.role,
         action_type="DOCUMENT_INGESTION",
         target_type="DOCUMENT",
         target_id=req.document_title[:20],
-        details=f"Simulated entity extraction on '{req.document_title}': {len(result['persons'])} persons, {len(result['phones'])} phones, {len(result['vehicles'])} vehicles found",
+        details=f"Entity extraction on '{req.document_title}': {len(result['persons'])} persons, {len(result.get('organizations', []))} orgs, {len(result['phones'])} phones, {len(result['vehicles'])} vehicles, {len(relationships)} relationships found",
     )
     return {
         "document_title": req.document_title,
+        "cleaned_text": cleaned_text,
         "extracted": result,
+        "relationships": relationships,
     }

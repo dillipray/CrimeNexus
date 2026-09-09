@@ -23,12 +23,14 @@ import UploadIngestionView from './views/UploadIngestionView';
 import ReportsView from './views/ReportsView';
 import AuditView from './views/AuditView';
 
-import { checkBackendHealth, fetchAlerts, fetchDuplicates } from './services/api';
+import { checkBackendHealth, fetchAlerts, fetchDuplicates, fetchCases } from './services/api';
 
 export default function App() {
   const [tab, setTab] = useState('dashboard');
-  const [activeCase, setActiveCase] = useState('CASE-2026-001');
+  const [activeCase, setActiveCase] = useState('FIR_0001');
   const [currentRole, setCurrentRole] = useState(ROLES[0]); // Investigating Officer (R. Basu)
+  const [casesList, setCasesList] = useState(CASES);
+  const [dbStatus, setDbStatus] = useState({ postgres: 'offline', neo4j: 'offline' });
 
   // Graph state
   const [selectedNode, setSelectedNode] = useState(null);
@@ -55,9 +57,27 @@ export default function App() {
       const health = await checkBackendHealth();
       if (mounted) {
         setBackendConnected(!!health);
+        if (health?.databases) {
+          setDbStatus(health.databases);
+        }
       }
     };
+
+    const loadCases = async () => {
+      const cData = await fetchCases();
+      if (mounted && cData?.cases?.length > 0) {
+        setCasesList(
+          cData.cases.map((c) => ({
+            id: c.case_id,
+            label: `${c.case_id} (${c.district || 'Nagpur'} - ${c.crime_type || 'Case'})`,
+            district: c.district || 'Nagpur',
+          }))
+        );
+      }
+    };
+
     testConnection();
+    loadCases();
     const interval = setInterval(testConnection, 8000);
     return () => {
       mounted = false;
@@ -116,6 +136,8 @@ export default function App() {
         onSelectEntity={selectEntity}
         onSearchEnter={handleSearchEnter}
         backendConnected={backendConnected}
+        casesList={casesList}
+        dbStatus={dbStatus}
       />
 
       <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
@@ -153,6 +175,8 @@ export default function App() {
                 relFilter={relFilter}
                 setRelFilter={setRelFilter}
                 onSelectEntity={selectEntity}
+                activeCase={activeCase}
+                backendConnected={backendConnected}
               />
             )}
 
@@ -192,7 +216,7 @@ export default function App() {
               />
             )}
 
-            {tab === 'analytics' && <AnalyticsView onSelectEntity={selectEntity} />}
+            {tab === 'analytics' && <AnalyticsView onSelectEntity={selectEntity} activeCase={activeCase} />}
 
             {tab === 'ingestion' && <UploadIngestionView onSelectEntity={selectEntity} />}
 
