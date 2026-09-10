@@ -1,5 +1,8 @@
 import re
-import spacy
+try:
+    import spacy
+except (ImportError, Exception):
+    spacy = None
 from typing import Dict, List, Any, Optional, Set, Tuple
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -65,13 +68,15 @@ class NLPService:
         self._init_search_index()
 
         # Load spaCy NLP pipeline with graceful fallback
-        try:
-            self.nlp = spacy.load("en_core_web_sm")
-        except Exception:
+        self.nlp = None
+        if spacy is not None:
             try:
-                self.nlp = spacy.blank("en")
+                self.nlp = spacy.load("en_core_web_sm")
             except Exception:
-                self.nlp = None
+                try:
+                    self.nlp = spacy.blank("en")
+                except Exception:
+                    self.nlp = None
 
     def _init_search_index(self):
         self.fir_ids = []
