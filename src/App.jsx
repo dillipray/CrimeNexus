@@ -22,6 +22,7 @@ import AnalyticsView from './views/AnalyticsView';
 import UploadIngestionView from './views/UploadIngestionView';
 import ReportsView from './views/ReportsView';
 import AuditView from './views/AuditView';
+import Neo4jWorkflowView from './views/Neo4jWorkflowView';
 
 import { checkBackendHealth, fetchAlerts, fetchDuplicates, fetchCases } from './services/api';
 
@@ -163,6 +164,14 @@ export default function App() {
                 onOpenResolution={() => setTab('resolution')}
                 activeCase={activeCase}
                 currentRole={currentRole}
+                onOpenNeo4jWorkflow={() => setTab('neo4j-workflow')}
+              />
+            )}
+
+            {tab === 'neo4j-workflow' && (
+              <Neo4jWorkflowView
+                activeCase={activeCase}
+                onSelectEntity={selectEntity}
               />
             )}
 
@@ -177,6 +186,7 @@ export default function App() {
                 onSelectEntity={selectEntity}
                 activeCase={activeCase}
                 backendConnected={backendConnected}
+                onOpenNeo4jWorkflow={() => setTab('neo4j-workflow')}
               />
             )}
 

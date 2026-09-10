@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { T, ENTITY_STYLE, REL_STYLE } from '../data/mockData';
 import { buildGraphForCase, getDefaultFocusForCase } from '../data/graphFromDataset';
 import { findShortestPath, detectCommunities, detectBridgesAndBrokers } from '../utils/graphAlgorithms';
+import Neo4jWorkflowView from './Neo4jWorkflowView';
 import {
   X,
   Database,
@@ -15,6 +16,7 @@ import {
   GitFork,
   Sparkles,
   Info,
+  Network,
 } from 'lucide-react';
 import { fetchGraphSubgraph } from '../services/api';
 
@@ -79,7 +81,8 @@ function buildFocused(focusId, allNodes, allEdges, activeTypes, maxN, maxE) {
   return { visNodes: allNodes.filter(n => finalIds.has(String(n.id))), visEdges: fEdges.filter(e => finalIds.has(String(e.a)) && finalIds.has(String(e.b))) };
 }
 
-export default function GraphView({ selectedNode, setSelectedNode, selectedEdge, setSelectedEdge, relFilter, setRelFilter, onSelectEntity, activeCase = 'FIR_0001', backendConnected = false }) {
+export default function GraphView({ selectedNode, setSelectedNode, selectedEdge, setSelectedEdge, relFilter, setRelFilter, onSelectEntity, activeCase = 'FIR_0001', backendConnected = false, onOpenNeo4jWorkflow }) {
+  const [graphMode, setGraphMode] = useState('graph'); // 'graph' | 'neo4j'
   const [zoom, setZoom] = useState(1);
   const [remoteGraph, setRemoteGraph] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -202,6 +205,65 @@ export default function GraphView({ selectedNode, setSelectedNode, selectedEdge,
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, height: 'calc(100vh - 120px)' }}>
+
+      {/* ── Inner Sub-Tab Toggle ───────────────────────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 0, background: T.panelAlt, borderRadius: 9, border: `1px solid ${T.border}`, padding: 3, alignSelf: 'flex-start' }}>
+        <button
+          onClick={() => setGraphMode('graph')}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '6px 16px', borderRadius: 7, border: 'none',
+            background: graphMode === 'graph' ? T.raised : 'transparent',
+            color: graphMode === 'graph' ? T.text : T.textDim,
+            fontWeight: graphMode === 'graph' ? 700 : 500,
+            fontSize: 12.5, cursor: 'pointer',
+            boxShadow: graphMode === 'graph' ? `0 0 10px ${T.signal}22` : 'none',
+            borderLeft: graphMode === 'graph' ? `2px solid ${T.signal}` : '2px solid transparent',
+            transition: 'all 0.18s ease',
+          }}
+        >
+          <Network size={13} color={graphMode === 'graph' ? T.signal : T.textFaint} />
+          Network Graph
+        </button>
+        <button
+          onClick={() => setGraphMode('neo4j')}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '6px 16px', borderRadius: 7, border: 'none',
+            background: graphMode === 'neo4j' ? 'rgba(56,189,248,0.12)' : 'transparent',
+            color: graphMode === 'neo4j' ? '#38bdf8' : T.textDim,
+            fontWeight: graphMode === 'neo4j' ? 700 : 500,
+            fontSize: 12.5, cursor: 'pointer',
+            boxShadow: graphMode === 'neo4j' ? '0 0 12px rgba(56,189,248,0.25)' : 'none',
+            borderLeft: graphMode === 'neo4j' ? '2px solid #38bdf8' : '2px solid transparent',
+            transition: 'all 0.18s ease',
+          }}
+        >
+          <Sparkles size={13} color={graphMode === 'neo4j' ? '#38bdf8' : T.textFaint} />
+          AI Workflow
+          <span style={{ fontSize: 9.5, fontWeight: 800, padding: '1px 5px', borderRadius: 6, background: 'rgba(56,189,248,0.18)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.35)' }}>AI</span>
+        </button>
+      </div>
+
+      {/* ── Neo4j AI Workflow Panel ─────────────────────────────────────── */}
+      {graphMode === 'neo4j' && (
+        <div style={{ flex: 1, minHeight: 0 }}>
+          <Neo4jWorkflowView
+            activeCase={activeCase}
+            onSelectEntity={(entityId) => {
+              // Switch to Network Graph sub-tab and focus the clicked entity
+              setGraphMode('graph');
+              setFocusId(String(entityId));
+              setSelectedNode(String(entityId));
+              setSelectedEdge(null);
+              setPositions({});
+            }}
+          />
+        </div>
+      )}
+
+      {/* ── Network Graph Panel ─────────────────────────────────────────── */}
+      {graphMode === 'graph' && (<>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9, flexWrap: 'wrap' }}>
@@ -218,6 +280,28 @@ export default function GraphView({ selectedNode, setSelectedNode, selectedEdge,
           <div style={{ fontSize: 11.5, color: T.textDim, marginTop: 3 }}>Click node to inspect · Double-click to re-focus · fCoSE force-directed layout</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {onOpenNeo4jWorkflow && (
+            <button
+              onClick={onOpenNeo4jWorkflow}
+              style={{
+                padding: '4px 11px',
+                borderRadius: 6,
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 5,
+                background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.22) 0%, rgba(2, 132, 199, 0.3) 100%)',
+                color: '#38bdf8',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                boxShadow: '0 0 10px rgba(56, 189, 248, 0.2)',
+              }}
+              title="Launch Neo4j Animated AI Workflow"
+            >
+              <Sparkles size={11} color="#38bdf8" /> Neo4j AI Flow
+            </button>
+          )}
           <button onClick={resetFocus} style={{ padding: '4px 9px', borderRadius: 6, fontSize: 11, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, background: T.panelAlt, color: T.textDim, border: '1px solid ' + T.border }}>
             <RotateCcw size={11} /> Reset
           </button>
@@ -582,6 +666,7 @@ export default function GraphView({ selectedNode, setSelectedNode, selectedEdge,
           <EdgePanel edgeId={selectedEdge} entities={entities} edges={visEdges} onClose={() => setSelectedEdge(null)} />
         )}
       </div>
+      </>)}
     </div>
   );
 }

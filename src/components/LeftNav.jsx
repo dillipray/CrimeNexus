@@ -21,7 +21,7 @@ export const NAV_GROUPS = [
     label: "Investigate",
     items: [
       { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { id: "graph", label: "Network Graph", icon: Network },
+      { id: "graph", label: "Network Graph", icon: Network, isHighlight: true },
       { id: "timeline", label: "Timeline", icon: Clock },
       { id: "leads", label: "AI Leads", icon: Lightbulb },
       { id: "comms", label: "Communication", icon: MessageSquare },
@@ -123,6 +123,23 @@ export default function LeftNav({ currentTab, setTab, pendingLeadsCount, pending
                     }}
                   >
                     {pendingMatchesCount}
+                  </span>
+                )}
+                {n.isHighlight && (
+                  <span
+                    style={{
+                      marginLeft: "auto",
+                      fontSize: 9.5,
+                      background: "rgba(56, 189, 248, 0.18)",
+                      color: "#38bdf8",
+                      borderRadius: 6,
+                      padding: "1px 5px",
+                      fontWeight: 800,
+                      border: "1px solid rgba(56, 189, 248, 0.35)",
+                      boxShadow: "0 0 8px rgba(56, 189, 248, 0.25)",
+                    }}
+                  >
+                    AI
                   </span>
                 )}
               </button>

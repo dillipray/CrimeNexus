@@ -182,3 +182,13 @@ export async function uploadPDFWithNER(file, forceOcr = false, actor = 'R. Basu'
     return { error: e.message };
   }
 }
+
+export async function fetchWorkflowPipeline(caseId = 'FIR_0001') {
+  try {
+    const res = await fetch(`${API_BASE}/graph/workflow-pipeline?case_id=${encodeURIComponent(caseId)}`, {
+      signal: AbortSignal.timeout(3000),
+    });
+    if (res.ok) return await res.json();
+  } catch (e) {}
+  return null;
+}

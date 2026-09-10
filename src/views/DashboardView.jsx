@@ -24,6 +24,7 @@ export default function DashboardView({
   onOpenResolution,
   activeCase,
   currentRole,
+  onOpenNeo4jWorkflow,
 }) {
   const stats = useMemo(() => getCaseStats(activeCase), [activeCase]);
   const caseLeads = useMemo(() => getLeadsForCase(activeCase, leads), [activeCase, leads]);
@@ -42,16 +43,39 @@ export default function DashboardView({
             Active Case: <strong style={{ color: T.signal }}>{activeCase}</strong> · Operational Role: <strong style={{ color: currentRole.color }}>{currentRole.name}</strong> ({currentRole.user})
           </div>
         </div>
-        <div style={{
-          fontSize: 11,
-          color: T.textFaint,
-          background: T.panel,
-          border: `1px solid ${T.border}`,
-          padding: "6px 12px",
-          borderRadius: 6,
-          fontFamily: "var(--mono)",
-        }}>
-          CONFIDENTIAL LAW ENFORCEMENT INTELLIGENCE
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {onOpenNeo4jWorkflow && (
+            <button
+              onClick={onOpenNeo4jWorkflow}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 14px",
+                borderRadius: 8,
+                background: "linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(2, 132, 199, 0.3) 100%)",
+                border: "1px solid rgba(56, 189, 248, 0.4)",
+                color: "#38bdf8",
+                fontSize: 12,
+                fontWeight: 700,
+                cursor: "pointer",
+                boxShadow: "0 0 12px rgba(56, 189, 248, 0.25)",
+              }}
+            >
+              <span>⚡ Watch Neo4j AI Flow</span>
+            </button>
+          )}
+          <div style={{
+            fontSize: 11,
+            color: T.textFaint,
+            background: T.panel,
+            border: `1px solid ${T.border}`,
+            padding: "6px 12px",
+            borderRadius: 6,
+            fontFamily: "var(--mono)",
+          }}>
+            CONFIDENTIAL LAW ENFORCEMENT INTELLIGENCE
+          </div>
         </div>
       </div>
 

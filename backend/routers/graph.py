@@ -29,3 +29,11 @@ def get_shortest_path(
     case_id: Optional[str] = None,
 ):
     return graph_service.shortest_path(source_id=source_id, target_id=target_id, case_id=case_id)
+
+@router.get("/workflow-pipeline")
+def get_workflow_pipeline(case_id: Optional[str] = "FIR_0001"):
+    """
+    Returns verified synthetic dataset metrics, entity-resolved graph nodes,
+    investigator neighborhood, and analytics for the 5-scene Neo4j workflow animation.
+    """
+    return graph_service.get_workflow_pipeline_data(case_id=case_id)
